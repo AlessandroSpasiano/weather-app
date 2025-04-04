@@ -4,7 +4,6 @@ import com.alexs.weatherapp.application.openweather.repository.OpenWeatherReposi
 import com.alexs.weatherapp.application.weather.repository.WeatherForecastRepository
 import com.alexs.weatherapp.domain.weather.errors.WeatherAppInternalError
 import com.alexs.weatherapp.domain.weather.models.Weather
-import com.alexs.weatherapp.infrastructure.openweather.OpenWeatherService
 import com.alexs.weatherapp.infrastructure.openweather.models.ResultWrapper
 import kotlinx.coroutines.CoroutineName
 import kotlinx.coroutines.Dispatchers

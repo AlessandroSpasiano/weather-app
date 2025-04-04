@@ -1,20 +1,23 @@
 package com.alexs.weatherapp.api.http.weather.contracts
 
+import com.alexs.weatherapp.api.http.weather.contracts.dto.WeatherInfoResponse
 import com.alexs.weatherapp.domain.weather.models.Weather
 
 data class WeatherForecastResponse(
     val city: String,
-    val temperature: String,
-    val wind: String,
-    val date: String
+    val info: List<WeatherInfoResponse>
 )
 
 fun Weather.toResponse(): WeatherForecastResponse {
     return WeatherForecastResponse(
-        city = this.city.name,
-        temperature = "${this.temperature.value.toTemperatureString()} ${this.temperature.unit}",
-        wind = "${this.wind.value.toWindString()} ${this.wind.unit}",
-        date = this.date.toString()
+        city = city.name,
+        info = weatherInfo.map {
+            WeatherInfoResponse(
+                date = it.date.toString(),
+                temperature = "${it.temperature.value.toTemperatureString()} ${it.temperature.unit}",
+                wind = "${it.wind.value.toWindString()} km/h"
+            )
+        }
     )
 }
 
