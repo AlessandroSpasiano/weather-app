@@ -8,4 +8,5 @@ data class WeatherInfo(
     val date: Instant,
     val temperature: Temperature,
     val wind: Wind,
+    val description: String
 )

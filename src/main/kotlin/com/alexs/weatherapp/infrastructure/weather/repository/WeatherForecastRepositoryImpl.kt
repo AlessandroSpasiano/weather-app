@@ -29,7 +29,7 @@ class WeatherForecastRepositoryImpl(
             when (response) {
                 is ResultWrapper.Success -> {
                     log.info("Weather forecast fetched successfully")
-                    response.value.toWeather()
+                    response.value.toWeather(temperatureUnit)
                 }
                 is ResultWrapper.GenericError -> {
                     log.error("Error fetching weather forecast: ${response.code} - ${response.error}")
