@@ -4,12 +4,14 @@ import com.alexs.weatherapp.application.cache.WeatherCache
 import com.alexs.weatherapp.application.common.clients.MetricVerifierClient
 import com.alexs.weatherapp.application.weather.queries.GetWeatherForecastByCityAndUnit
 import com.alexs.weatherapp.application.weather.repository.WeatherForecastRepository
+import com.alexs.weatherapp.domain.weather.errors.MetricsValidationError
 import com.alexs.weatherapp.domain.weather.models.Weather
 import com.alexs.weatherapp.domain.weather.models.WeatherInfo
 import com.alexs.weatherapp.domain.weather.valueObjects.*
 import kotlinx.coroutines.runBlocking
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
+import org.junit.jupiter.api.assertThrows
 import org.junit.jupiter.api.extension.ExtendWith
 import org.mockito.InjectMocks
 import org.mockito.Mock
@@ -100,6 +102,20 @@ class WeatherForecastQueryServiceImplTest {
             weatherForecastQueryService.handle(query)
 
             verify(metricVerifierClient).verifyTemperatureUnit(query.unit)
+        }
+    }
+
+    @Test
+    fun `should throw exception when temperature unit is invalid`() {
+        runBlocking {
+            `when`(metricVerifierClient.verifyTemperatureUnit(query.unit))
+                .thenThrow(MetricsValidationError("Invalid temperature unit: ${query.unit}"))
+
+            val exception = assertThrows<MetricsValidationError> {
+                weatherForecastQueryService.handle(query)
+            }
+
+            assertEquals("Invalid temperature unit: ${query.unit}", exception.message)
         }
     }
 
