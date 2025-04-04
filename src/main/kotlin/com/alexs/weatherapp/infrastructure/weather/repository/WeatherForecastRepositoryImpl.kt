@@ -5,6 +5,7 @@ import com.alexs.weatherapp.application.weather.repository.WeatherForecastReposi
 import com.alexs.weatherapp.domain.weather.errors.WeatherAppInternalError
 import com.alexs.weatherapp.domain.weather.models.Weather
 import com.alexs.weatherapp.infrastructure.openweather.models.ResultWrapper
+import com.alexs.weatherapp.infrastructure.openweather.utils.toAppError
 import kotlinx.coroutines.CoroutineName
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
@@ -33,7 +34,7 @@ class WeatherForecastRepositoryImpl(
                 }
                 is ResultWrapper.GenericError -> {
                     log.error("Error fetching weather forecast: ${response.code} - ${response.error}")
-                    throw WeatherAppInternalError("Error fetching weather forecast")
+                    throw response.error?.toAppError() ?: WeatherAppInternalError("Unknown error")
                 }
                 is ResultWrapper.NetworkError -> {
                     log.error("Network error fetching weather forecast")

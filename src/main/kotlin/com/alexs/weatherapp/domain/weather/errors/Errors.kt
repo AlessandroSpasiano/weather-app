@@ -10,3 +10,6 @@ class MetricsValidationError(msg: String): WeatherAppError(msg)
 
 @ResponseStatus(code = HttpStatus.INTERNAL_SERVER_ERROR)
 class WeatherAppInternalError(msg: String): WeatherAppError(msg)
+
+@ResponseStatus(code = HttpStatus.NOT_FOUND)
+class WeatherAppCityNotFoundError(msg: String): WeatherAppError(msg)

@@ -1,11 +1,13 @@
 package com.alexs.weatherapp.infrastructure.openweather.utils
 
+import com.alexs.weatherapp.domain.weather.errors.MetricsValidationError
+import com.alexs.weatherapp.domain.weather.errors.WeatherAppCityNotFoundError
+import com.alexs.weatherapp.domain.weather.errors.WeatherAppInternalError
 import com.alexs.weatherapp.infrastructure.openweather.models.ResultWrapper
 import com.google.gson.Gson
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.withContext
 import okio.IOException
-import org.springframework.web.ErrorResponse
 import retrofit2.HttpException
 
 suspend fun <T> safeApiCall(dispatcher: CoroutineDispatcher, apiCall: suspend () -> T): ResultWrapper<T> {
@@ -21,7 +23,7 @@ suspend fun <T> safeApiCall(dispatcher: CoroutineDispatcher, apiCall: suspend ()
                     ResultWrapper.GenericError(code, errorResponse)
                 }
                 else -> {
-                    ResultWrapper.GenericError(null, null)
+                    ResultWrapper.NetworkError
                 }
             }
         }
@@ -37,4 +39,12 @@ private fun convertErrorBody(throwable: HttpException): ErrorResponse? {
     } catch (exception: Exception) {
         null
     }
+}
+
+data class ErrorResponse(val cod: Int, val message: String?)
+
+fun ErrorResponse.toAppError() = when (cod) {
+    400 -> MetricsValidationError(message.orEmpty())
+    404 -> WeatherAppCityNotFoundError(message.orEmpty())
+    else -> WeatherAppInternalError(message.orEmpty())
 }

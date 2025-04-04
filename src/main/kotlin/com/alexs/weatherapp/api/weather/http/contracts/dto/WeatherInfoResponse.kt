@@ -4,5 +4,6 @@ data class WeatherInfoResponse(
     val minTemperature: String,
     val maxTemperature: String,
     val wind: String,
-    val date: String
+    val date: String,
+    val description: String
 )

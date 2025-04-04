@@ -1,6 +1,7 @@
 package com.alexs.weatherapp.api.weather.http.controllerAdvice
 
 import com.alexs.weatherapp.domain.weather.errors.MetricsValidationError
+import com.alexs.weatherapp.domain.weather.errors.WeatherAppCityNotFoundError
 import com.alexs.weatherapp.domain.weather.errors.WeatherAppInternalError
 import org.slf4j.LoggerFactory
 import org.springframework.http.HttpStatus
@@ -42,6 +43,21 @@ class GlobacControllerAdvice {
 
         return ResponseEntity
             .status(HttpStatus.INTERNAL_SERVER_ERROR)
+            .contentType(MediaType.APPLICATION_JSON)
+            .body(errorHttpResponse)
+            .also { logError(ex) }
+    }
+
+    @ExceptionHandler(value = [WeatherAppCityNotFoundError::class])
+    fun handleWeatherAppCityNotFoundError(ex: WeatherAppCityNotFoundError): ResponseEntity<ErrorHttpResponse> {
+        val errorHttpResponse = ErrorHttpResponse(
+            HttpStatus.NOT_FOUND.value(),
+            ex.message ?: "",
+            Instant.now().toString()
+        )
+
+        return ResponseEntity
+            .status(HttpStatus.NOT_FOUND)
             .contentType(MediaType.APPLICATION_JSON)
             .body(errorHttpResponse)
             .also { logError(ex) }

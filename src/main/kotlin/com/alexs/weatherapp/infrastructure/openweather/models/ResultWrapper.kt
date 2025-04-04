@@ -1,6 +1,7 @@
 package com.alexs.weatherapp.infrastructure.openweather.models
 
-import org.springframework.web.ErrorResponse
+import com.alexs.weatherapp.infrastructure.openweather.utils.ErrorResponse
+
 
 sealed class ResultWrapper<out T> {
     data class Success<out T>(val value: T): ResultWrapper<T>()

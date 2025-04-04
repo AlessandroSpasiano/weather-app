@@ -20,7 +20,8 @@ fun Weather.toResponse(): WeatherForecastResponse {
                 date = it.date.toDateString(),
                 minTemperature = "${it.temperature.min.toTemperatureString()} ${it.temperature.unit.toUnitString()}",
                 maxTemperature = "${it.temperature.max.toTemperatureString()} ${it.temperature.unit.toUnitString()}",
-                wind = "${it.wind.value.toWindString()} ${it.wind.unit.toWindString()}"
+                wind = "${it.wind.value.toWindString()} ${it.wind.unit.toWindString()}",
+                description = it.description
             )
         }
     )
