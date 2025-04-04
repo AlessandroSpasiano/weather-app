@@ -1,9 +1,16 @@
 spring:
   application:
     name: @project.artifactId@
+  data:
+    redis:
+      host: localhost
+      port: 6379
+  cache:
+    type: redis
 
 server:
   port: @server.port@
+
 
 openweather:
   apiKey: 42eaeb7914ab9a0fb0ee2e5f804d9b87

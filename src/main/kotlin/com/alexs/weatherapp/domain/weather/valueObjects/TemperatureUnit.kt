@@ -16,3 +16,11 @@ enum class TemperatureUnit {
         }
     }
 }
+
+fun TemperatureUnit.toUnitString(): String {
+    return when (this) {
+        TemperatureUnit.CELSIUS -> "°C"
+        TemperatureUnit.FAHRENHEIT -> "°F"
+        TemperatureUnit.KELVIN -> "K"
+    }
+}

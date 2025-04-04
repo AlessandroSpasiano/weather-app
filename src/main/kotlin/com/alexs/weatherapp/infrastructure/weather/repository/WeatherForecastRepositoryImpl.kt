@@ -10,10 +10,10 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.withContext
 import org.slf4j.LoggerFactory
-import org.springframework.stereotype.Repository
+import org.springframework.stereotype.Component
 
 
-@Repository
+@Component
 class WeatherForecastRepositoryImpl(
     private val openWeatherRepository: OpenWeatherRepository
 ): WeatherForecastRepository {

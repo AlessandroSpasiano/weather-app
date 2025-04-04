@@ -6,8 +6,6 @@ import com.alexs.weatherapp.infrastructure.openweather.models.OpenWeatherForecas
 import com.alexs.weatherapp.infrastructure.openweather.models.ResultWrapper
 import com.alexs.weatherapp.infrastructure.openweather.utils.safeApiCall
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.flow
 import org.springframework.stereotype.Repository
 
 @Repository

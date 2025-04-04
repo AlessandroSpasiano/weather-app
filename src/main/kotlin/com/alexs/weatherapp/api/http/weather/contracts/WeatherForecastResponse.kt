@@ -2,7 +2,8 @@ package com.alexs.weatherapp.api.http.weather.contracts
 
 import com.alexs.weatherapp.api.http.weather.contracts.dto.WeatherInfoResponse
 import com.alexs.weatherapp.domain.weather.models.Weather
-import org.springframework.format.annotation.DateTimeFormat
+import com.alexs.weatherapp.domain.weather.valueObjects.toUnitString
+import com.alexs.weatherapp.domain.weather.valueObjects.toWindString
 import java.time.Instant
 import java.time.format.DateTimeFormatter
 
@@ -17,9 +18,9 @@ fun Weather.toResponse(): WeatherForecastResponse {
         info = weatherInfo.map {
             WeatherInfoResponse(
                 date = it.date.toDateString(),
-                minTemperature = "${it.temperature.min.toTemperatureString()} ${it.temperature.unit}",
-                maxTemperature = "${it.temperature.max.toTemperatureString()} ${it.temperature.unit}",
-                wind = "${it.wind.value.toWindString()} km/h"
+                minTemperature = "${it.temperature.min.toTemperatureString()} ${it.temperature.unit.toUnitString()}",
+                maxTemperature = "${it.temperature.max.toTemperatureString()} ${it.temperature.unit.toUnitString()}",
+                wind = "${it.wind.value.toWindString()} ${it.wind.unit.toWindString()}"
             )
         }
     )
