@@ -13,7 +13,7 @@ fun OpenWeatherForecast.toWeather() = Weather(
             longitude = city.coord.lon
         )
     ),
-    date = Instant.ofEpochMilli(this.list.first().dt),
+    date = Instant.ofEpochMilli(this.list.first().dt * 1000),
     temperature = Temperature(
         value = this.list.first().main.temp,
         unit = TemperatureUnit.CELSIUS

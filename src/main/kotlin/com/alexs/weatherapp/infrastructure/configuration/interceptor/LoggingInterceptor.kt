@@ -16,8 +16,8 @@ internal class LoggingInterceptor : Interceptor {
         val t1 = System.nanoTime()
         logger.info(
             String.format(
-                "Sending request %s on %s%n%s",
-                request.url, chain.connection(), request.headers
+                "Sending request %s",
+                request.url
             )
         )
 
@@ -26,8 +26,8 @@ internal class LoggingInterceptor : Interceptor {
         val t2 = System.nanoTime()
         logger.info(
             String.format(
-                "Received response for %s in %.1fms%n%s",
-                response.request.url, (t2 - t1) / 1e6, response.headers
+                "Received response for %s in %.1fms%n",
+                response.request.url, (t2 - t1) / 1e6
             )
         )
 
