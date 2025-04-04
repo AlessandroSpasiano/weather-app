@@ -83,7 +83,7 @@ class WeatherController(
     suspend fun getWeatherForecast(
         @RequestParam(name = "city", required = true) city: String,
         @RequestParam(name = "unit", required = false, defaultValue = "metric") unit: String
-    ): ResponseEntity<out Any> {
+    ): ResponseEntity<WeatherForecastResponse> {
         val response = weatherQueryService.handle(
             GetWeatherForecastByCityAndUnit(
                 city = city,

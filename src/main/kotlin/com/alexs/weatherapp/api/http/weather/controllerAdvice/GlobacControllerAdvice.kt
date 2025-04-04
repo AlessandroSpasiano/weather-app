@@ -13,8 +13,8 @@ import java.time.Instant
 @ControllerAdvice
 class GlobacControllerAdvice {
 
-    @ExceptionHandler(value = [RuntimeException::class])
-    fun handleRuntimeException(ex: RuntimeException): ResponseEntity<ErrorHttpResponse> {
+    @ExceptionHandler(value = [Exception::class])
+    fun handleException(ex: Exception): ResponseEntity<ErrorHttpResponse> {
         val errorHttpResponse = ErrorHttpResponse(
             HttpStatus.INTERNAL_SERVER_ERROR.value(),
             ex.message ?: "",
@@ -25,7 +25,11 @@ class GlobacControllerAdvice {
             .status(HttpStatus.INTERNAL_SERVER_ERROR)
             .contentType(MediaType.APPLICATION_JSON)
             .body(errorHttpResponse)
-            .also { log.error("(GlobalControllerAdvice) ${ex::class.java.name}: ${ex.stackTraceToString()}") }
+            .also { logError(ex) }
+    }
+
+    private fun logError(ex: Exception) {
+        log.error("(GlobalControllerAdvice) ${ex::class.java.name}: ${ex.stackTraceToString()}")
     }
 
     @ExceptionHandler(value = [WeatherAppInternalError::class])
@@ -40,7 +44,7 @@ class GlobacControllerAdvice {
             .status(HttpStatus.INTERNAL_SERVER_ERROR)
             .contentType(MediaType.APPLICATION_JSON)
             .body(errorHttpResponse)
-            .also { log.error("(GlobalControllerAdvice) ${ex::class.java.name}: ${ex.message}") }
+            .also { logError(ex) }
     }
 
     @ExceptionHandler(value = [MetricsValidationError::class])
@@ -55,7 +59,7 @@ class GlobacControllerAdvice {
             .status(HttpStatus.BAD_REQUEST)
             .contentType(MediaType.APPLICATION_JSON)
             .body(errorHttpResponse)
-            .also { log.error("(GlobalControllerAdvice) ${ex::class.java.name}: ${ex.message}") }
+            .also { logError(ex) }
     }
 
     companion object {
