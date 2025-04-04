@@ -1,0 +1,10 @@
+spring:
+  application:
+    name: @project.artifactId@
+
+server:
+  port: @server.port@
+
+openweather:
+  apiKey: 42eaeb7914ab9a0fb0ee2e5f804d9b87
+  url: "https://api.openweathermap.org/"
