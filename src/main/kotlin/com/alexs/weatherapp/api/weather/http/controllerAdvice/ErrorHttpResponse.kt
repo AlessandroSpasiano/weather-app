@@ -1,4 +1,4 @@
-package com.alexs.weatherapp.api.http.weather.controllerAdvice
+package com.alexs.weatherapp.api.weather.http.controllerAdvice
 
 data class ErrorHttpResponse(
     val status: Int,

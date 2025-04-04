@@ -1,4 +1,4 @@
-package com.alexs.weatherapp.api.http.weather.controllerAdvice
+package com.alexs.weatherapp.api.weather.http.controllerAdvice
 
 import com.alexs.weatherapp.domain.weather.errors.MetricsValidationError
 import com.alexs.weatherapp.domain.weather.errors.WeatherAppInternalError

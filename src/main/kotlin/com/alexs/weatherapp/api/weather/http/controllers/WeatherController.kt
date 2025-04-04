@@ -1,8 +1,8 @@
-package com.alexs.weatherapp.api.http.weather.controllers
+package com.alexs.weatherapp.api.weather.http.controllers
 
-import com.alexs.weatherapp.api.http.weather.contracts.WeatherForecastResponse
-import com.alexs.weatherapp.api.http.weather.contracts.toResponse
-import com.alexs.weatherapp.api.http.weather.controllerAdvice.ErrorHttpResponse
+import com.alexs.weatherapp.api.weather.http.contracts.WeatherForecastResponse
+import com.alexs.weatherapp.api.weather.http.contracts.toResponse
+import com.alexs.weatherapp.api.weather.http.controllerAdvice.ErrorHttpResponse
 import com.alexs.weatherapp.application.weather.queries.GetWeatherForecastByCityAndUnit
 import com.alexs.weatherapp.application.weather.services.WeatherForecastQueryService
 import io.swagger.v3.oas.annotations.Operation

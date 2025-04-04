@@ -1,4 +1,4 @@
-package com.alexs.weatherapp.api.http.weather.contracts.dto
+package com.alexs.weatherapp.api.weather.http.contracts.dto
 
 data class WeatherInfoResponse(
     val minTemperature: String,

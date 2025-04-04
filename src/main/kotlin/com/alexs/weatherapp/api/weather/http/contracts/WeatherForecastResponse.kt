@@ -1,6 +1,6 @@
-package com.alexs.weatherapp.api.http.weather.contracts
+package com.alexs.weatherapp.api.weather.http.contracts
 
-import com.alexs.weatherapp.api.http.weather.contracts.dto.WeatherInfoResponse
+import com.alexs.weatherapp.api.weather.http.contracts.dto.WeatherInfoResponse
 import com.alexs.weatherapp.domain.weather.models.Weather
 import com.alexs.weatherapp.domain.weather.valueObjects.toUnitString
 import com.alexs.weatherapp.domain.weather.valueObjects.toWindString
