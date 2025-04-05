@@ -13,3 +13,6 @@ class WeatherAppInternalError(msg: String): WeatherAppError(msg)
 
 @ResponseStatus(code = HttpStatus.NOT_FOUND)
 class WeatherAppCityNotFoundError(msg: String): WeatherAppError(msg)
+
+@ResponseStatus(code = HttpStatus.UNAUTHORIZED)
+class WeatherAppUnauthorizedError(msg: String): WeatherAppError(msg)

@@ -51,7 +51,8 @@ class WeatherForecastRepositoryImpl(
         log.error("Error fetching weather forecast: ${error.code} - ${error.error}")
         when (error.code) {
             400 -> throw WeatherAppInternalError("Bad request: ${error.error}")
-            404 -> throw WeatherAppInternalError("City not found: ${error.error}")
+            404 -> throw WeatherAppCityNotFoundError(error.error?.message.orEmpty().ifEmpty { "City not found" })
+            401 -> throw WeatherAppUnauthorizedError("Unauthorized")
             else -> throw WeatherAppInternalError(defaultMessage)
         }
     }

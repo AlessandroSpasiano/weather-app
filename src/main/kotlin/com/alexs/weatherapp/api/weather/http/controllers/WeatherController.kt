@@ -26,8 +26,8 @@ class WeatherController(
     @Operation(
         summary = "Get weather forecast",
         description = "Get weather forecast by city and unit. " +
-                "The unit of measurement can be Celsius (metric) or Fahrenheit (imperial) or Kelvin (standard). " +
-                "If no unit is specified, the default is Celsius (metric). " +
+                "The unit of measurement can be Celsius, Fahrenheit or Kelvin. " +
+                "If no unit is specified, the default is Celsius. " +
                 "The forecast returned is for the next 5 days.",
         method = "getWeatherForecast",
         responses = [
@@ -55,6 +55,18 @@ class WeatherController(
                     )
                 ]
             ),
+            ApiResponse(
+                responseCode = "404",
+                description = "City not found",
+                content = [
+                    Content(
+                        mediaType = "application/json",
+                        schema = Schema(
+                            implementation = ErrorHttpResponse::class
+                        )
+                    )
+                ]
+            )
         ],
         parameters = [
             Parameter(
@@ -74,7 +86,7 @@ class WeatherController(
                 `in` = ParameterIn.QUERY,
                 schema = Schema(
                     type = "string",
-                    example = "metric or imperial or standard"
+                    example = "celsius"
                 )
             )
         ]
@@ -82,7 +94,7 @@ class WeatherController(
     @GetMapping(path = ["/forecast"])
     suspend fun getWeatherForecast(
         @RequestParam(name = "city", required = true) city: String,
-        @RequestParam(name = "unit", required = false, defaultValue = "metric") unit: String
+        @RequestParam(name = "unit", required = false, defaultValue = "celsius") unit: String
     ): ResponseEntity<WeatherForecastResponse> {
         val response = weatherQueryService.handle(
             GetWeatherForecastByCityAndUnit(
