@@ -34,13 +34,25 @@ class WeatherForecastRepositoryImpl(
                 }
                 is ResultWrapper.GenericError -> {
                     log.error("Error fetching weather forecast: ${response.code} - ${response.error}")
-                    throw response.error?.toAppError() ?: WeatherAppInternalError("Unknown error")
+                    handleError(response)
                 }
                 is ResultWrapper.NetworkError -> {
                     log.error("Network error fetching weather forecast")
                     throw WeatherAppInternalError("Network error fetching weather forecast")
                 }
             }
+        }
+    }
+
+    private fun handleError(
+        error: ResultWrapper.GenericError,
+        defaultMessage: String = "Error fetching weather forecast"
+    ): Weather {
+        log.error("Error fetching weather forecast: ${error.code} - ${error.error}")
+        when (error.code) {
+            400 -> throw WeatherAppInternalError("Bad request: ${error.error}")
+            404 -> throw WeatherAppInternalError("City not found: ${error.error}")
+            else -> throw WeatherAppInternalError(defaultMessage)
         }
     }
 
