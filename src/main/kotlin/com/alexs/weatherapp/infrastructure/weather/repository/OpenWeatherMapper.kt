@@ -39,3 +39,12 @@ fun OpenWeatherForecast.toWeather(temperatureUnit: String) = Weather(
             )
     }
 )
+
+fun String.toOpenWeatherUnit(): String {
+    return when (this) {
+        TemperatureUnit.CELSIUS.toUnitString() -> "metric"
+        TemperatureUnit.FAHRENHEIT.toUnitString() -> "imperial"
+        TemperatureUnit.KELVIN.toUnitString() -> "standard"
+        else -> "metric"
+    }
+}

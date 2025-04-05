@@ -9,7 +9,10 @@ import org.springframework.stereotype.Component
 class MetricVerifierClientImpl: MetricVerifierClient {
     override fun verifyTemperatureUnit(temperatureUnit: String): Boolean {
         if (TemperatureUnit.fromString(temperatureUnit) == null) {
-            throw MetricsValidationError("Invalid temperature unit: $temperatureUnit")
+            throw MetricsValidationError(
+                "Invalid temperature unit: $temperatureUnit. Valid options are: ${TemperatureUnit.entries.joinToString(", ") { it.name.lowercase() }}."
+
+            )
         }
 
         return true

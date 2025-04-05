@@ -2,10 +2,11 @@ package com.alexs.weatherapp.infrastructure.weather.repository
 
 import com.alexs.weatherapp.application.openweather.repository.OpenWeatherRepository
 import com.alexs.weatherapp.application.weather.repository.WeatherForecastRepository
+import com.alexs.weatherapp.domain.weather.errors.WeatherAppCityNotFoundError
 import com.alexs.weatherapp.domain.weather.errors.WeatherAppInternalError
+import com.alexs.weatherapp.domain.weather.errors.WeatherAppUnauthorizedError
 import com.alexs.weatherapp.domain.weather.models.Weather
 import com.alexs.weatherapp.infrastructure.openweather.models.ResultWrapper
-import com.alexs.weatherapp.infrastructure.openweather.utils.toAppError
 import kotlinx.coroutines.CoroutineName
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
@@ -17,7 +18,7 @@ import org.springframework.stereotype.Component
 @Component
 class WeatherForecastRepositoryImpl(
     private val openWeatherRepository: OpenWeatherRepository
-): WeatherForecastRepository {
+) : WeatherForecastRepository {
 
     private val ctx = Job() + CoroutineName(this::class.java.name) + Dispatchers.IO
     override suspend fun getWeatherForecastByCityName(cityName: String, temperatureUnit: String): Weather {
@@ -25,17 +26,19 @@ class WeatherForecastRepositoryImpl(
             log.info("Fetching weather forecast for city: $cityName with unit: $temperatureUnit")
 
             val response =
-                openWeatherRepository.getWeatherForecastByCityName(cityName, temperatureUnit)
+                openWeatherRepository.getWeatherForecastByCityName(cityName, temperatureUnit.toOpenWeatherUnit())
 
             when (response) {
                 is ResultWrapper.Success -> {
                     log.info("Weather forecast fetched successfully")
                     response.value.toWeather(temperatureUnit)
                 }
+
                 is ResultWrapper.GenericError -> {
                     log.error("Error fetching weather forecast: ${response.code} - ${response.error}")
                     handleError(response)
                 }
+
                 is ResultWrapper.NetworkError -> {
                     log.error("Network error fetching weather forecast")
                     throw WeatherAppInternalError("Network error fetching weather forecast")

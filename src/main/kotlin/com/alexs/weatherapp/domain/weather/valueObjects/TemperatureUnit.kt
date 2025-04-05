@@ -8,8 +8,8 @@ enum class TemperatureUnit {
     companion object {
         fun fromString(value: String): TemperatureUnit? {
             return when (value.uppercase()) {
-                "METRIC" -> CELSIUS
-                "IMPERIAL" -> FAHRENHEIT
+                "CELSIUS" -> CELSIUS
+                "FAHRENHEIT" -> FAHRENHEIT
                 "KELVIN" -> KELVIN
                 else -> null
             }
