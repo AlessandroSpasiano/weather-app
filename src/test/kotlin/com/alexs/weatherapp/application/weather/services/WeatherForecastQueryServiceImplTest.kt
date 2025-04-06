@@ -1,6 +1,5 @@
 package com.alexs.weatherapp.application.weather.services
 
-import com.alexs.weatherapp.application.cache.WeatherCache
 import com.alexs.weatherapp.application.common.clients.MetricVerifierClient
 import com.alexs.weatherapp.application.weather.queries.GetWeatherForecastByCityAndUnit
 import com.alexs.weatherapp.application.weather.repository.WeatherForecastRepository
@@ -29,9 +28,6 @@ class WeatherForecastQueryServiceImplTest {
     @Mock
     lateinit var metricVerifierClient: MetricVerifierClient
 
-    @Mock
-    lateinit var weatherCache: WeatherCache
-
     @InjectMocks
     lateinit var weatherForecastQueryService: WeatherForecastQueryServiceImpl
 
@@ -46,55 +42,9 @@ class WeatherForecastQueryServiceImplTest {
     }
 
     @Test
-    fun `should fetch weather from cache if available`() {
-        runBlocking {
-            val weather = provideFakeWeatherForecast()
-
-            `when`(weatherCache.getWeatherForecastByCityName(query.city, query.unit))
-                .thenReturn(weather)
-
-            `when`(metricVerifierClient.verifyTemperatureUnit(query.unit))
-                .thenReturn(true)
-
-            val result = weatherForecastQueryService.handle(query)
-
-            verify(weatherCache).getWeatherForecastByCityName(query.city, query.unit)
-            verifyNoInteractions(repository)
-            assertEquals(weather, result)
-        }
-    }
-
-    @Test
-    fun `should fetch weather from repository if not available in cache`() {
-        runBlocking {
-            val fakeWeather = provideFakeWeatherForecast()
-
-            `when`(weatherCache.getWeatherForecastByCityName(query.city, query.unit))
-                .thenReturn(null)
-
-            `when`(repository.getWeatherForecastByCityName(query.city, query.unit))
-                .thenReturn(fakeWeather)
-
-            `when`(metricVerifierClient.verifyTemperatureUnit(query.unit))
-                .thenReturn(true)
-
-            val result = weatherForecastQueryService.handle(query)
-
-            verify(weatherCache).getWeatherForecastByCityName(query.city, query.unit)
-            verify(repository).getWeatherForecastByCityName(query.city, query.unit)
-            verify(weatherCache).putWeatherForecastByCityName(query.city, fakeWeather)
-
-            assertEquals(fakeWeather, result)
-        }
-    }
-
-    @Test
     fun `should call metricVerifierClient to verifiy temperature unit`() {
         runBlocking {
             val fakeWeather = provideFakeWeatherForecast()
-
-            `when`(weatherCache.getWeatherForecastByCityName(query.city, query.unit))
-                .thenReturn(null)
 
             `when`(repository.getWeatherForecastByCityName(query.city, query.unit))
                 .thenReturn(fakeWeather)

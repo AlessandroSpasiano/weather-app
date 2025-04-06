@@ -1,6 +1,7 @@
 package com.alexs.weatherapp.infrastructure.weather.repository
 
 import com.alexs.weatherapp.application.openweather.repository.OpenWeatherRepository
+import com.alexs.weatherapp.application.weather.persistance.WeatherPersistance
 import com.alexs.weatherapp.application.weather.repository.WeatherForecastRepository
 import com.alexs.weatherapp.domain.weather.errors.WeatherAppCityNotFoundError
 import com.alexs.weatherapp.domain.weather.errors.WeatherAppInternalError
@@ -16,7 +17,8 @@ import org.springframework.stereotype.Component
 
 @Component
 class WeatherForecastRepositoryImpl(
-    private val openWeatherRepository: OpenWeatherRepository
+    private val openWeatherRepository: OpenWeatherRepository,
+    private val weatherPersistance: WeatherPersistance
 ) : WeatherForecastRepository {
 
     private val ctx = CoroutineName(this::class.java.name) + Dispatchers.IO
@@ -24,25 +26,36 @@ class WeatherForecastRepositoryImpl(
         return withContext(ctx) {
             log.info("Fetching weather forecast for city: $cityName with unit: $temperatureUnit")
 
-            val response =
-                openWeatherRepository.getWeatherForecastByCityName(cityName, temperatureUnit.toOpenWeatherUnit())
+            weatherPersistance.getWeatherForecastByCityName(cityName, temperatureUnit)
+                ?: run {
+                    val response =
+                        openWeatherRepository.getWeatherForecastByCityName(cityName, temperatureUnit.toOpenWeatherUnit())
 
-            when (response) {
-                is ResultWrapper.Success -> {
-                    log.info("Weather forecast fetched successfully")
-                    response.value.toWeather(temperatureUnit)
+                    when (response) {
+                        is ResultWrapper.Success -> {
+
+                            log.info("Caching weather forecast for city: $cityName with unit: $temperatureUnit")
+
+                            weatherPersistance.saveWeatherForecast(
+                                weather = response.value.toWeather(temperatureUnit)
+                            )
+
+                            response.value.toWeather(temperatureUnit)
+                        }
+
+                        is ResultWrapper.GenericError -> {
+                            log.error("Error fetching weather forecast: ${response.code} - ${response.error}")
+                            handleError(response)
+                        }
+
+                        is ResultWrapper.NetworkError -> {
+                            log.error("Network error fetching weather forecast")
+                            throw WeatherAppInternalError("Network error fetching weather forecast")
+                        }
+                    }
                 }
 
-                is ResultWrapper.GenericError -> {
-                    log.error("Error fetching weather forecast: ${response.code} - ${response.error}")
-                    handleError(response)
-                }
 
-                is ResultWrapper.NetworkError -> {
-                    log.error("Network error fetching weather forecast")
-                    throw WeatherAppInternalError("Network error fetching weather forecast")
-                }
-            }
         }
     }
 

@@ -1,6 +1,6 @@
-package com.alexs.weatherapp.infrastructure.cache
+package com.alexs.weatherapp.infrastructure.weather.persistance
 
-import com.alexs.weatherapp.application.cache.WeatherCache
+import com.alexs.weatherapp.application.weather.persistance.WeatherPersistance
 import com.alexs.weatherapp.domain.weather.models.Weather
 import com.alexs.weatherapp.domain.weather.valueObjects.TemperatureUnit
 import kotlinx.coroutines.CoroutineName
@@ -12,9 +12,9 @@ import org.springframework.stereotype.Component
 import java.time.Duration
 
 @Component
-class WeatherCacheImpl(
+class WeatherPersistanceImpl(
     private val redisTemplate: RedisTemplate<String, Weather>
-) : WeatherCache {
+) : WeatherPersistance {
 
 
     override suspend fun getWeatherForecastByCityName(cityName: String, temperatureUnit: String): Weather? {
@@ -26,11 +26,11 @@ class WeatherCacheImpl(
         }
     }
 
-    override suspend fun putWeatherForecastByCityName(cityName: String, weather: Weather) {
+    override suspend fun saveWeatherForecast(weather: Weather) {
         withContext(ctx) {
 
             val key = getKey(
-                cityName = cityName,
+                cityName = weather.city.name,
                 temperatureUnit = weather.weatherInfo.firstOrNull()?.temperature?.unit
                     ?: TemperatureUnit.CELSIUS
             )
@@ -50,6 +50,6 @@ class WeatherCacheImpl(
     private val ctx = CoroutineName(this::class.java.name) + Dispatchers.IO
     companion object {
         private const val CACHE_PREFIX = "weather"
-        private val log = LoggerFactory.getLogger(WeatherCacheImpl::class.java)
+        private val log = LoggerFactory.getLogger(WeatherPersistanceImpl::class.java)
     }
 }

@@ -1,6 +1,5 @@
 package com.alexs.weatherapp.application.weather.services
 
-import com.alexs.weatherapp.application.cache.WeatherCache
 import com.alexs.weatherapp.application.common.clients.MetricVerifierClient
 import com.alexs.weatherapp.application.weather.queries.GetWeatherForecastByCityAndUnit
 import com.alexs.weatherapp.application.weather.repository.WeatherForecastRepository
@@ -14,8 +13,7 @@ import org.springframework.stereotype.Service
 @Service
 class WeatherForecastQueryServiceImpl(
     private val weatherForecastRepository: WeatherForecastRepository,
-    private val metricVerifierClient: MetricVerifierClient,
-    private val weatherCache: WeatherCache
+    private val metricVerifierClient: MetricVerifierClient
 ): WeatherForecastQueryService {
     override suspend fun handle(
         query: GetWeatherForecastByCityAndUnit
@@ -26,23 +24,10 @@ class WeatherForecastQueryServiceImpl(
 
             metricVerifierClient.verifyTemperatureUnit(query.unit)
 
-            weatherCache.getWeatherForecastByCityName(query.city, query.unit)
-                ?: run {
-                    log.info("Weather forecast not found in cache, fetching from repository")
-
-                    weatherForecastRepository.getWeatherForecastByCityName(
-                        cityName = query.city,
-                        temperatureUnit = query.unit
-                    ).also {
-
-                        log.info("Weather forecast fetched from repository. Caching it.")
-
-                        weatherCache.putWeatherForecastByCityName(
-                            cityName = query.city,
-                            weather = it
-                        )
-                    }
-                }
+            weatherForecastRepository.getWeatherForecastByCityName(
+                cityName = query.city,
+                temperatureUnit = query.unit
+            )
         }
     }
 

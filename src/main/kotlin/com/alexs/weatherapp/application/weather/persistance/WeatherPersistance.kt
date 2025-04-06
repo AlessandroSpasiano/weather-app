@@ -1,11 +1,11 @@
-package com.alexs.weatherapp.application.cache
+package com.alexs.weatherapp.application.weather.persistance
 
 import com.alexs.weatherapp.domain.weather.models.Weather
 
-interface WeatherCache {
+interface WeatherPersistance {
 
     suspend fun getWeatherForecastByCityName(cityName: String, temperatureUnit: String): Weather?
 
-    suspend fun putWeatherForecastByCityName(cityName: String, weather: Weather)
+    suspend fun saveWeatherForecast(weather: Weather)
 
 }

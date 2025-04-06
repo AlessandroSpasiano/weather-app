@@ -5,12 +5,12 @@ import com.alexs.weatherapp.domain.weather.errors.WeatherAppCityNotFoundError
 import com.alexs.weatherapp.domain.weather.errors.WeatherAppInternalError
 import com.alexs.weatherapp.infrastructure.openweather.models.ResultWrapper
 import com.google.gson.Gson
-import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.withContext
 import okio.IOException
 import retrofit2.HttpException
+import kotlin.coroutines.CoroutineContext
 
-suspend fun <T> safeApiCall(dispatcher: CoroutineDispatcher, apiCall: suspend () -> T): ResultWrapper<T> {
+suspend fun <T> safeApiCall(dispatcher: CoroutineContext, apiCall: suspend () -> T): ResultWrapper<T> {
     return withContext(dispatcher) {
         try {
             ResultWrapper.Success(apiCall.invoke())
@@ -42,9 +42,3 @@ private fun convertErrorBody(throwable: HttpException): ErrorResponse? {
 }
 
 data class ErrorResponse(val cod: Int, val message: String?)
-
-fun ErrorResponse.toAppError() = when (cod) {
-    400 -> MetricsValidationError(message.orEmpty())
-    404 -> WeatherAppCityNotFoundError(message.orEmpty())
-    else -> WeatherAppInternalError(message.orEmpty())
-}
