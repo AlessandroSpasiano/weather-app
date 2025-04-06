@@ -7,7 +7,6 @@ import com.alexs.weatherapp.application.weather.repository.WeatherForecastReposi
 import com.alexs.weatherapp.domain.weather.models.Weather
 import kotlinx.coroutines.CoroutineName
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.Job
 import kotlinx.coroutines.withContext
 import org.slf4j.LoggerFactory
 import org.springframework.stereotype.Service
@@ -47,7 +46,7 @@ class WeatherForecastQueryServiceImpl(
         }
     }
 
-    private val ctx = Job() + CoroutineName(this::class.java.name) + Dispatchers.IO
+    private val ctx = CoroutineName(this::class.java.name) + Dispatchers.IO
 
     companion object {
         private val log = LoggerFactory.getLogger(WeatherForecastQueryServiceImpl::class.java)

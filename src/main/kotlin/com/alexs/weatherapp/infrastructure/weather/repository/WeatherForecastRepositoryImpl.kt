@@ -9,7 +9,6 @@ import com.alexs.weatherapp.domain.weather.models.Weather
 import com.alexs.weatherapp.infrastructure.openweather.models.ResultWrapper
 import kotlinx.coroutines.CoroutineName
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.Job
 import kotlinx.coroutines.withContext
 import org.slf4j.LoggerFactory
 import org.springframework.stereotype.Component
@@ -20,7 +19,7 @@ class WeatherForecastRepositoryImpl(
     private val openWeatherRepository: OpenWeatherRepository
 ) : WeatherForecastRepository {
 
-    private val ctx = Job() + CoroutineName(this::class.java.name) + Dispatchers.IO
+    private val ctx = CoroutineName(this::class.java.name) + Dispatchers.IO
     override suspend fun getWeatherForecastByCityName(cityName: String, temperatureUnit: String): Weather {
         return withContext(ctx) {
             log.info("Fetching weather forecast for city: $cityName with unit: $temperatureUnit")
