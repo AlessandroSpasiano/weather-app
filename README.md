@@ -64,6 +64,8 @@ openweather:
   apiKey: YOUR_API_KEY
 ```
 
+To get an API key, sign up at [OpenWeather](https://openweathermap.org/api).
+
 ### Using Docker for Redis
 If you prefer to use Docker for running Redis, you can start a Redis container:
 
