@@ -13,7 +13,7 @@ server:
 
 
 openweather:
-  apiKey: 42eaeb7914ab9a0fb0ee2e5f804d9b87
+  apiKey:
   url: "https://api.openweathermap.org/"
 
 springdoc:
