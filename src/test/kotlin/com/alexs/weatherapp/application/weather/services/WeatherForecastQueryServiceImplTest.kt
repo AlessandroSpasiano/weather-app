@@ -1,6 +1,6 @@
 package com.alexs.weatherapp.application.weather.services
 
-import com.alexs.weatherapp.application.common.clients.MetricVerifierClient
+import com.alexs.weatherapp.application.common.validation.MetricValidation
 import com.alexs.weatherapp.application.weather.queries.GetWeatherForecastByCityAndUnit
 import com.alexs.weatherapp.application.weather.repository.WeatherForecastRepository
 import com.alexs.weatherapp.domain.weather.errors.MetricsValidationError
@@ -26,7 +26,7 @@ class WeatherForecastQueryServiceImplTest {
     lateinit var repository: WeatherForecastRepository
 
     @Mock
-    lateinit var metricVerifierClient: MetricVerifierClient
+    lateinit var metricValidation: MetricValidation
 
     @InjectMocks
     lateinit var weatherForecastQueryService: WeatherForecastQueryServiceImpl
@@ -51,14 +51,14 @@ class WeatherForecastQueryServiceImplTest {
 
             weatherForecastQueryService.handle(query)
 
-            verify(metricVerifierClient).verifyTemperatureUnit(query.unit)
+            verify(metricValidation).verifyTemperatureUnit(query.unit)
         }
     }
 
     @Test
     fun `should throw exception when temperature unit is invalid`() {
         runBlocking {
-            `when`(metricVerifierClient.verifyTemperatureUnit(query.unit))
+            `when`(metricValidation.verifyTemperatureUnit(query.unit))
                 .thenThrow(MetricsValidationError("Invalid temperature unit: ${query.unit}"))
 
             val exception = assertThrows<MetricsValidationError> {

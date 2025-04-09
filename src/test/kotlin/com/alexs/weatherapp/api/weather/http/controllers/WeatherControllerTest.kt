@@ -71,6 +71,18 @@ class WeatherControllerTest {
         }
     }
 
+    @Test
+    fun `test getWeatherForecastByCityAndUnit 500`() {
+        runBlocking {
+            // Given
+            val cityName = "London"
+
+            mockMvc.get("/api/v1/weather/forecast?city=$cityName&unit=invalid")
+                .asyncDispatch()
+                .andExpect { status { isInternalServerError() } }
+        }
+    }
+
     private fun provideFakeWeatherForecast(): Weather {
         return Weather(
             city = City(

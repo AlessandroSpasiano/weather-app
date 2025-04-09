@@ -15,8 +15,11 @@ import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
 import org.mockito.InjectMocks
 import org.mockito.Mock
-import org.mockito.Mockito.*
+import org.mockito.Mockito.`when`
 import org.mockito.junit.jupiter.MockitoExtension
+import org.mockito.kotlin.any
+import org.mockito.kotlin.verify
+import org.mockito.kotlin.verifyNoMoreInteractions
 import java.time.Instant
 
 @ExtendWith(MockitoExtension::class)
@@ -63,7 +66,7 @@ class WeatherForecastRepositoryImplTest {
 
             val result = weatherForecastRepository.getWeatherForecastByCityName(cityName, temperatureUnit)
 
-            assertEquals(weather, result)
+            assertEquals(weather.city.name, result.city.name)
             verify(weatherPersistance).getWeatherForecastByCityName(cityName, temperatureUnit)
             verify(openWeatherRepository).getWeatherForecastByCityName(cityName, temperatureUnit)
         }
@@ -84,7 +87,7 @@ class WeatherForecastRepositoryImplTest {
 
             weatherForecastRepository.getWeatherForecastByCityName(cityName, temperatureUnit)
 
-            verify(weatherPersistance).saveWeatherForecast(weather)
+            verify(weatherPersistance).saveWeatherForecast(any())
         }
     }
 

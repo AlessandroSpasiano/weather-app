@@ -1,6 +1,6 @@
 package com.alexs.weatherapp.application.weather.services
 
-import com.alexs.weatherapp.application.common.clients.MetricVerifierClient
+import com.alexs.weatherapp.application.common.validation.MetricValidation
 import com.alexs.weatherapp.application.weather.queries.GetWeatherForecastByCityAndUnit
 import com.alexs.weatherapp.application.weather.repository.WeatherForecastRepository
 import com.alexs.weatherapp.domain.weather.models.Weather
@@ -13,7 +13,7 @@ import org.springframework.stereotype.Service
 @Service
 class WeatherForecastQueryServiceImpl(
     private val weatherForecastRepository: WeatherForecastRepository,
-    private val metricVerifierClient: MetricVerifierClient
+    private val metricValidation: MetricValidation
 ): WeatherForecastQueryService {
     override suspend fun handle(
         query: GetWeatherForecastByCityAndUnit
@@ -22,7 +22,7 @@ class WeatherForecastQueryServiceImpl(
 
             log.info("Executing GET weather for ${query.city} with unit ${query.unit}")
 
-            metricVerifierClient.verifyTemperatureUnit(query.unit)
+            metricValidation.verifyTemperatureUnit(query.unit)
 
             weatherForecastRepository.getWeatherForecastByCityName(
                 cityName = query.city,
