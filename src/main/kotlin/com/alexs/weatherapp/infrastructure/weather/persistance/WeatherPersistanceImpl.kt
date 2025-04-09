@@ -44,7 +44,7 @@ class WeatherPersistanceImpl(
     }
 
     private fun getKey(cityName: String, temperatureUnit: TemperatureUnit): String {
-        return "$CACHE_PREFIX:$cityName:${temperatureUnit.name.lowercase()}"
+        return "$CACHE_PREFIX:${cityName.lowercase()}:${temperatureUnit.name.lowercase()}"
     }
 
     private val ctx = CoroutineName(this::class.java.name) + Dispatchers.IO
