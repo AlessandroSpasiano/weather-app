@@ -1,0 +1,40 @@
+spring:
+  application:
+    name: @project.artifactId@
+  data:
+    redis:
+      host: localhost
+      port: 6379
+
+server:
+  port: @server.port@
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info
+  endpoint:
+    health:
+      show-details: always
+  info:
+    env:
+      enabled: true
+
+info:
+  app:
+    name: @project.name@
+    description: @project.description@
+    version: @project.version@
+    encoding: @project.build.sourceEncoding@
+    java:
+      version: @java.version@
+
+openweather:
+  apiKey:
+  url: "https://api.openweathermap.org/"
+
+springdoc:
+  api-docs:
+    enabled: true
+    path: /api-docs
